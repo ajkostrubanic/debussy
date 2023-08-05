@@ -1,7 +1,7 @@
 from notes import Note
 import scales
 from scales import Scale
-from harmony import RomanNumeral
+from harmony import RomanNumeral, Chord
 
 class TestNote:
     def test_from_name(self) -> None:
@@ -54,3 +54,18 @@ class TestRomanNumeral:
         assert chords[1] == RomanNumeral(2, 'maj', 'aug')
         chords = list(RomanNumeral.get_scale_chords(scales.HARMONIC_MINOR))
         assert chords[4] == RomanNumeral(7, 'maj', 'perf')
+
+    def test_in_key(self) -> None:
+        rn = RomanNumeral(0, 'maj', 'perf')
+        assert rn.in_key(Note.from_name('A')) == Chord(Note.from_name('A'), 'maj', 'perf')
+        rn = RomanNumeral(7, 'min', 'dim')
+        assert rn.in_key(Note.from_name("C")) == Chord(Note.from_name('G'), 'min', 'dim')
+
+class TestChord:
+    def test_str(self) -> None:
+        ch = Chord(Note.from_name("C"), "min", "dim")
+        assert str(ch) == "Cdim"
+        ch = Chord(Note.from_name("F"), "maj", "aug", "maj7")
+        assert str(ch) == "F+maj7"
+        ch = Chord(Note.from_name("D"), "min", "perf", "m7")
+        assert str(ch) == "Dm7"

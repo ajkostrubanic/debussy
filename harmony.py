@@ -1,5 +1,6 @@
 from typing import Iterator
 from scales import Scale
+from notes import Note
 
 ROMAN_NUMERALS = ["I", "IIb", "II", "IIIb", "III", "IV", "IV#", "V", "VIb", "VI", "VIIb", "VII"]
 
@@ -48,3 +49,35 @@ class RomanNumeral:
         for interval in scale.intervals:
             rn = RomanNumeral(interval).fit_to_scale(scale)
             yield rn
+
+    def in_key(self, key: Note) -> 'Chord':
+        """Returns the chord in a corresponding key."""
+        return Chord(key + self.value, self.third, self.fifth, '')
+
+class Chord:
+    def __init__(self, root: Note, third: str = 'maj', fifth: str = 'perf', extns: str = ''):
+        self.root = root
+        self.third = third
+        self.fifth = fifth
+        self.extensions = extns
+
+    def __repr__(self) -> str:
+        name = str(self.root)
+        if self.fifth == "aug" and self.third == "maj":
+            return name + "+" + self.extensions
+        elif self.fifth == "dim" and self.third == "min":
+            return name + "dim" + self.extensions
+        if self.third == "min":
+            if "m" in self.extensions and not "maj" in self.extensions:
+                return name + self.extensions
+            return name + 'm' + self.extensions
+        else:
+            return name + self.extensions
+        
+    def __eq__(self, other: 'Chord') -> bool:
+        if type(other) is Chord:
+            return (
+                self.root == other.root and self.third == other.third and
+                self.fifth == other.fifth and self.extensions == other.extensions
+            )
+        return False
