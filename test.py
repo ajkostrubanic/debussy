@@ -37,3 +37,20 @@ class TestRomanNumeral:
         assert str(rn) == "iv-dim"
         rn = RomanNumeral(7, 'maj', 'aug')
         assert str(rn) == "V+"
+
+    def test_fit_to_scale(self) -> None:
+        wt = scales.WHOLE_TONE
+        rn = RomanNumeral(0).fit_to_scale(wt)
+        assert rn == RomanNumeral(0, 'maj', 'aug')
+        mx = scales.MIXOLYDIAN
+        rn = RomanNumeral(10).fit_to_scale(mx)
+        assert rn == RomanNumeral(10, 'maj', 'perf')
+
+    def test_get_scale_chords(self) -> None:
+        chords = list(RomanNumeral.get_scale_chords(scales.MIXOLYDIAN))
+        assert chords[6] == RomanNumeral(10, 'maj', 'perf')
+        chords = list(RomanNumeral.get_scale_chords(scales.WHOLE_TONE))
+        assert chords[0] == RomanNumeral(0, 'maj', 'aug')
+        assert chords[1] == RomanNumeral(2, 'maj', 'aug')
+        chords = list(RomanNumeral.get_scale_chords(scales.HARMONIC_MINOR))
+        assert chords[4] == RomanNumeral(7, 'maj', 'perf')

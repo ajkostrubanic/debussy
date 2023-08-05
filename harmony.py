@@ -21,6 +21,11 @@ class RomanNumeral:
             name += "+"
         return name
     
+    def __eq__(self, other: 'RomanNumeral') -> bool:
+        if type(other) is RomanNumeral:
+            return other.value == self.value and other.third == self.third and other.fifth == self.fifth
+        return False
+    
     def fit_to_scale(self, scale: Scale) -> 'RomanNumeral':
         if (self.value + 4) % 12 in scale:
             third = 'maj'
@@ -36,6 +41,7 @@ class RomanNumeral:
             fifth = 'dim'
         else:
             fifth = 'None'
+        return RomanNumeral(self.value, third, fifth)
 
     @classmethod
     def get_scale_chords(cls, scale: Scale) -> Iterator['RomanNumeral']:
